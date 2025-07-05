@@ -1,6 +1,5 @@
 const shortid = require('shortid');
 const URL = require("../models/url");
-
 async function handleGenerateNewShortURL(req, res) {
     const body = req.body;
 
@@ -14,6 +13,7 @@ async function handleGenerateNewShortURL(req, res) {
         shortId: shortID,
         redirectURL: body.url,
         visitHistory: [],
+        createdBy: req.user._id
     });
 
     const allurls = await URL.find({});
