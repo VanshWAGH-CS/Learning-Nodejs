@@ -2,7 +2,7 @@ const express = require('express');
 const { connectToMongoDB } = require('./connect');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const { restrictToLoggedinUserOnly, checkAuth } = require('./middlewares/auth');
+const { checkForAuthentication, restrictTo } = require('./middlewares/auth');
 
 const urlRoute = require('./routes/url');
 const staticRoute = require('./routes/staticRouter');
@@ -25,11 +25,13 @@ app.set('views', path.resolve('./views'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForAuthentication);
 
 // Routes
-app.use('/', checkAuth, staticRoute);
+app.use('/', staticRoute);
 app.use('/user', userRoute);
-app.use('/url', restrictToLoggedinUserOnly, urlRoute);
+app.use('/url', restrictTo(['NORMAL']), urlRoute);
 
 // Redirect handler
 app.get('/url/:shortId', async (req, res) => {
