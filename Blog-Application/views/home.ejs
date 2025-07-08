@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Blogify | Home</title>
+    <style>
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container mt-4">
+        <% if (user) { %>
+            <div class="d-flex justify-content-end mb-4">
+                <a href="/blog/add-new" class="btn btn-success">+ Add New Blog</a>
+            </div>
+        <% } %>
+        
+        <h2 class="mb-4">Latest Blogs</h2>
+        
+        <% if (blogs.length === 0) { %>
+            <div class="alert alert-info">
+                No blogs found. Be the first to create one!
+            </div>
+        <% } else { %>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <% blogs.forEach(blog => { %>
+                    <div class="col">
+                        <div class="card h-100">
+                            <% if (blog.coverImageURL) { %>
+                                <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="<%= blog.title %>">
+                            <% } %>
+                            
+                            <div class="card-body">
+                                <h5 class="card-title"><%= blog.title %></h5>
+                                <p class="card-text text-truncate"><%= blog.body.substring(0, 100) %>...</p>
+                                <a href="/blog/<%= blog._id %>" class="btn btn-primary">Read More</a>
+                            </div>
+                            
+                            <div class="card-footer bg-transparent">
+                                <small class="text-muted">
+                                    Posted on <%= new Date(blog.createdAt).toLocaleDateString() %>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    </div>
+    
+    <%- include('partials/scripts') %>
+</body>
+</html>

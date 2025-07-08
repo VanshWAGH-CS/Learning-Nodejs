@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Sign In | Blogify</title>
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 2rem;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container">
+        <div class="auth-container">
+            <h2 class="text-center mb-4">Sign In</h2>
+            
+            <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+            
+            <form action="/user/signin" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Sign In</button>
+            </form>
+            
+            <div class="mt-3 text-center">
+                Don't have an account? <a href="/user/signup">Sign up</a>
+            </div>
+        </div>
+    </div>
+    
+    <%- include('partials/scripts') %>
+</body>
+</html>
