@@ -4,6 +4,7 @@ import express from 'express';
 import { ApolloServer } from '@apollo/server';
 // Import express middleware for integrating Apollo with Express
 import { expressMiddleware } from '@as-integrations/express5';
+import { prismaClient } from './lib/db';
 
 async function init() {
     // Initialize an Express app
@@ -23,6 +24,9 @@ async function init() {
                 hello: String
                 say(name: String): String
             }
+            type Mutation {
+                createUser(firstName: String!, lastName: String!, email: String!, password : String!): Boolean
+            }
         `,
         // Define resolver functions that execute the GraphQL queries
         resolvers: {
@@ -31,6 +35,20 @@ async function init() {
                 hello: () => `Hey there, I am a GraphQL Server`,
                 say: (_, {name}: {name: String})=> `Hey ${name}, How are you ?`
             },
+            Mutation: {
+                createdUser: async(_, {firstName, lastName, email, password}: {firstName: string; lastName: string; email: string; password: string })=> {
+                    await prismaClient.user.create({
+                        data : {
+                            email,
+                            firstName,
+                            lastName,
+                            password,
+                            salt: 'random_salt',
+                        },
+                    });
+                    return true;
+                }
+            }
         },
     });
 
